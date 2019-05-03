@@ -5,6 +5,11 @@
 
 float Huffman::computeEntropy() // computes entropy and probability of each greyscale value
 {
+    for (i = 0; i < 256; i++)
+        probability[i] = 0;
+
+    for (i = 0; i < input.size; i++)
+        probability[input[i]]++;
     unsigned long long pixels = input.size(); //total number of pixels in the pic
     float entropy = 0;
     for (auto value : input) //for loop to calculate frequency of each greyscale value
