@@ -1,15 +1,20 @@
 #include "huffman.hpp"
 #include <bits/stdc++.h>
 #include <stdlib.h>
+#include <iostream>
 // functions definitions here
+
+void Huffman::computeProb()
+{
+    for (int i = 0; i < 256; i++)
+        probability[i] = 0;
+
+    for (int i = 0; i < input.size; i++)
+        probability[std::atof(input[i])]++;
+}
 
 float Huffman::computeEntropy() // computes entropy and probability of each greyscale value
 {
-    for (i = 0; i < 256; i++)
-        probability[i] = 0;
-
-    for (i = 0; i < input.size; i++)
-        probability[input[i]]++;
     unsigned long long pixels = input.size(); //total number of pixels in the pic
     float entropy = 0;
     for (auto value : input) //for loop to calculate frequency of each greyscale value
@@ -62,7 +67,7 @@ void Huffman::buildTree()
     priority_queue<Node, std::vector<Node>, compare> min_Heap;
 
     for (int i = 0; i < Huffman::input.size; ++i) //Build Heap
-        min_Heap.push(new Node(input[i],probability[input[i]] , nullptr , nullptr);
+        min_Heap.push(new Node{pixelsArray[i],probability[ std::atof(input[i]) ] , nullptr , nullptr};
     // Iterate while size of heap doesn't become 1
     while (min_Heap.size() != 1) {
             // Extract the two minimum
@@ -92,8 +97,23 @@ void Huffman::getCodeTable()
 {
 }
 
+bool exist(std::vector<unsigned char> charArray, char element)
+{
+    for (int i = 0; i < charArray.size; i++)
+    {
+        if (element == charArray[i])
+            return true;
+    }
+    return false
+}
+
 void Huffman::readInput()
 {
+    for (int i = 0; i < input.size; i++)
+    {
+        if (!exist(pixelsArray, input[i]))
+            pixelsArray.push_back(input[i]);
+    }
 }
 
 void Huffman::printEncoded()

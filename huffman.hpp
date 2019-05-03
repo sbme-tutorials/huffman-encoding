@@ -24,6 +24,7 @@ public:
 private:
   Node *tree;
   std::vector<unsigned char> input;
+  std::vector<unsigned char> pixelsArray ;
   int width = 0, height = 0;
   std::vector<int> probability;
   std::map<unsigned char, std::string> codeTable; //greyscale value : code
