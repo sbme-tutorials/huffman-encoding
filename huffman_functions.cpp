@@ -1,15 +1,7 @@
 #include "huffman.hpp"
 #include <bits/stdc++.h>
+#include <stdlib.h>
 // functions definitions here
-
-float Huffman::computeProb()
-{
-    for (i = 0; i < 256; i++)
-        probability[i] = 0;
-
-    for (i = 0; i < input.size; i++)
-        probability[input[i]]++;
-}
 
 float Huffman::computeEntropy() // computes entropy and probability of each greyscale value
 {
@@ -65,7 +57,7 @@ void Huffman::buildTree()
     priority_queue<Node, std::vector<Node>, compare> min_Heap;
 
     for (int i = 0; i < Huffman::input.size; ++i) //Build Heap
-        min_Heap.push(new Node(input[i],probability[i] , nullptr , nullptr);
+        min_Heap.push(new Node(input[i],probability[input[i]] , nullptr , nullptr);
     // Iterate while size of heap doesn't become 1
     while (min_Heap.size() != 1) {
             // Extract the two minimum
