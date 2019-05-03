@@ -2,7 +2,16 @@
 #include <bits/stdc++.h>
 // functions definitions here
 
-float Huffman::computeProb() // computes entropy and probability of each greyscale value
+float Huffman::computeProb()
+{
+    for (i = 0; i < 256; i++)
+        probability[i] = 0;
+
+    for (i = 0; i < input.size; i++)
+        probability[input[i]]++;
+}
+
+float Huffman::computeEntropy() // computes entropy and probability of each greyscale value
 {
     unsigned long long pixels = input.size(); //total number of pixels in the pic
     float entropy = 0;
