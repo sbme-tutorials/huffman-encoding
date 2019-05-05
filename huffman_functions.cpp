@@ -1,7 +1,16 @@
 #include "huffman.hpp"
+<<<<<<< HEAD
+#include <map>
+#include <vector>
+#include "math.h"
+#include <algorithm>
+#include <iostream>
+#include <bits/stdc++.h>
+=======
 #include <bits/stdc++.h>
 #include <stdlib.h>
 #include <iostream>
+>>>>>>> 90e85c7c98056ef1b9d8ae2473bf7970e2703a59
 // functions definitions here
 
 void Huffman::computeProb()
@@ -31,7 +40,7 @@ float Huffman::computeEntropy() // computes entropy and probability of each grey
     return -1 * entropy;
 }
 
-double Huffman::encode() // calls reaInput() , computeEntropy(), buildTree() , printEncoded()
+double Huffman::encode()
 {
     readInput();
     computeProb();
@@ -44,7 +53,6 @@ double Huffman::encode() // calls reaInput() , computeEntropy(), buildTree() , p
         compressionRatio += code.size();
     }
     printEncoded();
-    printCodeTable();
     return compressionRatio;
 }
 
@@ -69,61 +77,77 @@ Node Huffman::buildTree()
     for (int i = 0; i < Huffman::pixelsArray.size; ++i) //Build Heap
         min_Heap.push(new Node{pixelsArray[i],probability[ std::atof(pixelsArray[i]) ] , nullptr , nullptr};
     // Iterate while size of heap doesn't become 1
-    while (min_Heap.size() != 1) {
+    while (minHeap.size() != 1) {
             // Extract the two minimum
             // freq items from min heap
-            Node left = min_Heap.top();
-            min_Heap.pop();
-
-            Node right = min_Heap.top();
-            min_Heap.pop();
-
+            Node left = minHeap.top();
+            minHeap.pop();
+            Node right = minHeap.top();
+            minHeap.pop();
             // Create a new internal node with frequency equal to the sum of the
             // two nodes frequencies. Make the two extracted node as left and right children
             // of this new node. Add this node to the min heap '$' is a special value
             // for internal nodes, not used
-            Node top = new Node('$', left.p + right.p);
-            top.left = left;
-            top.right = right;
-            min_Heap.push(top);
+            Node parent = new Node('$', left.p + right.p,left,right);
+            minHeap.push(parent);
     }
     //  The remaining node is the 
     // root node and the tree is complete. 
-
-return   min_Heap.top ;
+    tree = parent;
+    unsigned char arr[1000]; //arbitrary size
+    getCodeTable(tree,arr,0);
 }
 
-void Huffman::getCodeTable()
+void Huffman::getCodeTable(Node *parent, unsigned char *arr, int index)
 {
-}
-
-bool exist(std::vector<unsigned char> charArray, char element)
-{
-    for (int i = 0; i < charArray.size; i++)
+    if (parent->left)
     {
-        if (element == charArray[i])
-            return true;
+        arr[index] = '0';
+        getCodeTable(parent->left,arr,index+1);
     }
-    return false
+    
+    if (parent->right)
+    {
+        arr[index] = '1';
+        getCodeTable(parent->right,arr,index+1);
+    }
+    std::vector<unsigned char> binaryCode(arr, arr + index);
+    codeTable[parent->val] = binaryCode;
 }
 
+// ifstream myfile;
+// myfile.open();
+// myfile >> 
 void Huffman::readInput()
 {
-    for (int i = 0; i < input.size; i++)
-    {
-        if (!exist(pixelsArray, input[i]))
-            pixelsArray.push_back(input[i]);
-    }
+  int width = 0, height = 0;
+  std::string intensity;
+  int maxIntensity;
+  int c;
+  cin >> intensity >> width >> height >> maxIntensity;
+  for (int i = 0; i < width * height; i++)
+  {
+    int temp;
+    cin >> temp;
+    msg.push_back(temp);
+  }    
 }
-
+//./hw_p3 -encode
 void Huffman::printEncoded()
 {
 }
 
-void Huffman::printDecoded() //input/output with files
+void Huffman::printDecoded(std::string outputfile) //input/output with files
 {
+    string directory = "./output/" + outputfile + ".pgm";
+    ofstream myfile;
+    myfile.open(directory);
+    //print file specs width, heigth
+    //print size of table code words && table of codewords
+    for(auto e: decoded) {
+      myfile << (int)e << " ";
+    }
+    myfile.close();
 }
 
-void Huffman::printCodeTable()
-{
-}
+
