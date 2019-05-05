@@ -60,7 +60,7 @@ struct compare
     }
 };
 
-void Huffman::buildTree()
+Node Huffman::buildTree()
 {
     // Create a min heap & inserts all characters of input data[]
     priority_queue<Node, std::vector<Node>, compare> min_Heap;
