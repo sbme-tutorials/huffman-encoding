@@ -17,10 +17,10 @@ struct Node //tree node
 
 class Huffman
 {
-public:
-  void computeProb();
-  int encode();
-  void decode();
+  public:
+    float computeProb();
+    double encode();
+    void decode();
 
 private:
   Node *tree;
@@ -32,11 +32,11 @@ private:
   std::vector<unsigned int> encoded;
   std::vector<unsigned char> decoded;
 
-  float computeEntropy();
-  void readInput();
-  void buildTree();
-  void printEncoded();
-  void printDecoded();
+    void readInput();
+    void buildTree();
+    void printEncoded();
+    void printDecoded();
+    void getCodeTable(Node *parent, unsigned char *arr, int index);
 };
 
 #endif
