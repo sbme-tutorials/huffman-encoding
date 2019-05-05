@@ -61,13 +61,13 @@ struct compare
     }
 };
 
-void Huffman::buildTree()
+Node Huffman::buildTree()
 {
     // Create a min heap & inserts all characters of input data[]
     priority_queue<Node, std::vector<Node>, compare> min_Heap;
 
-    for (int i = 0; i < Huffman::input.size; ++i) //Build Heap
-        min_Heap.push(new Node{pixelsArray[i],probability[ std::atof(input[i]) ] , nullptr , nullptr};
+    for (int i = 0; i < Huffman::pixelsArray.size; ++i) //Build Heap
+        min_Heap.push(new Node{pixelsArray[i],probability[ std::atof(pixelsArray[i]) ] , nullptr , nullptr};
     // Iterate while size of heap doesn't become 1
     while (min_Heap.size() != 1) {
             // Extract the two minimum
