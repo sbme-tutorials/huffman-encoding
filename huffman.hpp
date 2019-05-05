@@ -21,22 +21,24 @@ class Huffman
     float computeProb();
     double encode();
     void decode();
+    void readInput(std::string);
 
 private:
   Node *tree;
   std::vector<unsigned char> input;
   std::vector<unsigned char> pixelsArray ;
   int width = 0, height = 0;
-  std::map<unsigned char , unsigned long long> probability;
-  std::map<unsigned char, bitset<1000> > codeTable; //greyscale value : code
-  std::vector<unsigned int> encoded;
+  std::map<unsigned char , float> probability;
+  std::map<unsigned char , float>::iterator prob_it;
+  std::map<unsigned char, std::bitset<100> > codeTable; //greyscale value : code
+  std::map<unsigned char, std::bitset<100> >::iterator codeTable_it;
+  std::vector<std::bitset<100>> encoded;
   std::vector<unsigned char> decoded;
 
-    void readInput();
     void buildTree();
-    void printEncoded();
-    void printDecoded();
-    void getCodeTable(Node *parent, unsigned char *arr, int index);
+    void outputEncoded(std::string outputfile);
+    void outputDecoded(std::string outputfile);
+    void getCodeTable(Node *parent, std::bitset<100> arr, int index);
 };
 
 #endif
