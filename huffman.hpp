@@ -5,6 +5,7 @@
 #include <utility>
 #include <string>
 #include <map>
+#include <bits/stdc++.h>
 
 struct Node //tree node
 {
@@ -27,7 +28,7 @@ private:
   std::vector<unsigned char> pixelsArray ;
   int width = 0, height = 0;
   std::map<unsigned char , unsigned long long> probability;
-  std::map<unsigned char, std::string> codeTable; //greyscale value : code
+  std::map<unsigned char, bitset<1000> > codeTable; //greyscale value : code
   std::vector<unsigned int> encoded;
   std::vector<unsigned char> decoded;
 

@@ -1,16 +1,10 @@
 #include "huffman.hpp"
-<<<<<<< HEAD
 #include <map>
 #include <vector>
 #include "math.h"
 #include <algorithm>
 #include <iostream>
 #include <bits/stdc++.h>
-=======
-#include <bits/stdc++.h>
-#include <stdlib.h>
-#include <iostream>
->>>>>>> 90e85c7c98056ef1b9d8ae2473bf7970e2703a59
 // functions definitions here
 
 void Huffman::computeProb()
@@ -94,27 +88,25 @@ Node Huffman::buildTree()
     //  The remaining node is the 
     // root node and the tree is complete. 
     tree = parent;
-    unsigned char arr[1000]; //arbitrary size
+    bitset<1000> arr; //arbitrary size
     getCodeTable(tree,arr,0);
 }
 
-void Huffman::getCodeTable(Node *parent, unsigned char *arr, int index)
+void Huffman::getCodeTable(Node *parent, bitset<1000> arr, int index)
 {
     if (parent->left)
     {
-        arr[index] = '0';
+        arr[index] = 0;
         getCodeTable(parent->left,arr,index+1);
     }
     
     if (parent->right)
     {
-        arr[index] = '1';
+        arr[index] = 1;
         getCodeTable(parent->right,arr,index+1);
     }
-    std::vector<unsigned char> binaryCode(arr, arr + index);
-    codeTable[parent->val] = binaryCode;
+    codeTable[parent->val] = arr;
 }
-
 // ifstream myfile;
 // myfile.open();
 // myfile >> 
