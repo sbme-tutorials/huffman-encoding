@@ -16,6 +16,7 @@ struct Node //tree node
 
 class Huffman
 {
+<<<<<<< HEAD
   public:
     float computeProb();
     double encode();
@@ -35,6 +36,28 @@ class Huffman
     void printEncoded();
     void printDecoded();
     void getCodeTable(Node *parent, unsigned char *arr, int index)
+=======
+public:
+  void computeProb();
+  int encode();
+  void decode();
+
+private:
+  Node *tree;
+  std::vector<unsigned char> input;
+  std::vector<unsigned char> pixelsArray ;
+  int width = 0, height = 0;
+  std::vector<int> probability;
+  std::map<unsigned char, std::string> codeTable; //greyscale value : code
+  std::vector<unsigned int> encoded;
+  std::vector<unsigned char> decoded;
+
+  float computeEntropy();
+  void readInput();
+  void buildTree();
+  void printEncoded();
+  void printDecoded();
+>>>>>>> 90e85c7c98056ef1b9d8ae2473bf7970e2703a59
 };
 
 #endif
