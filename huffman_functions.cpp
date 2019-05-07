@@ -8,15 +8,16 @@
 #include <queue>
 // functions definitions here
 
-void Huffman::readInput(std::string)
+void readInput()
 {
-    //./test.cpp -encode > eath.pgm
+    //./a.exe < ./data/t.pgm
     std::string intensity;
-    unsigned char maxIntensity;
+    int maxIntensity;
+    int width, height;
     std::cin >> intensity >> width >> height >> maxIntensity;
     for (int i = 0; i < width * height; i++)
     {
-        unsigned char temp;
+        int temp;
         std::cin >> temp;
         input.push_back(temp);
     }
@@ -49,119 +50,101 @@ struct compare
 void Huffman::buildTree()
 {
     // Create a min heap & inserts all characters of input data[]
-    std::priority_queue<Node*, std::vector<Node*>, compare> minHeap;
+    std::priority_queue<Node *, std::vector<Node *>, compare> minHeap;
 
     //build heap
     for (auto pixel : probability)
     {
-        Node* n = new Node{prob_it->first, prob_it->second, nullptr, nullptr};
+        Node *n = new Node{prob_it->first, prob_it->second, nullptr, nullptr};
         minHeap.push(n);
     }
     while (minHeap.size() != 1)
     {
-        Node* left = minHeap.top();
+        Node *left = minHeap.top();
         minHeap.pop();
-        Node* right = minHeap.top();
+        Node *right = minHeap.top();
         minHeap.pop();
-        Node* parent = new Node;
-        parent->p =left->p + right->p;
-        parent->left= left;
-        parent->right =right;
+        Node *parent = new Node;
+        parent->p = left->p + right->p;
+        parent->left = left;
+        parent->right = right;
         minHeap.push(parent);
         tree = parent;
     }
-    std::bitset<100> arr; //arbitrary size
+    char arr[100]; //arbitrary size
     getCodeTable(tree, arr, 0);
 }
-void Huffman::getCodeTable(Node *parent, std::bitset<100> arr, int index)
+void Huffman::getCodeTable(Node *parent, char *arr, int index)
 {
     if (parent->left)
     {
-        arr[index] = 0;
+        arr[index] = '0';
         getCodeTable(parent->left, arr, index + 1);
     }
 
     if (parent->right)
     {
-        arr[index] = 1;
+        arr[index] = '1';
         getCodeTable(parent->right, arr, index + 1);
     }
-    codeTable[parent->val] = arr;
-    //add line
+    std::string binaryCode(arr, arr + index);
+    codeTable[parent->val] = binaryCode;
 }
-
-double Huffman::encode()
+double Huffman::encode(std::string outputfile)
 {
-    //readInput();
+    readInput();
     computeProb();
     buildTree();
     double compressionRatio = 0;
     for (auto element : input)
     {
-        std::bitset<100> binaryCode = codeTable[element];
+        std::string binaryCode = codeTable[element];
         encoded.push_back(binaryCode);
         compressionRatio += binaryCode.size();
     }
-    outputEncoded("encoded_text");
+    outputEncoded(std::string outputfile);
     return compressionRatio;
 }
-
 void Huffman::outputEncoded(std::string outputfile) //input/output with files
 {
     std::string intensity;
-    unsigned char maxIntensity;
+    int maxIntensity;
     std::string directory = "./output/" + outputfile + ".txt";
     std::ofstream myfile;
     myfile.open(directory);
-    myfile << intensity << std::endl
-           << width << height << std::endl
-           << maxIntensity << std::endl << encoded.size();
-
+    myfile << "P2" <<" "<< width <<" "<< height <<" "<< 256 << " "<< encoded.size() << " "<< codeTable_it.size() << std::endl; // print info 
     for (auto e : encoded)
     {
-        myfile << e;
+        myfile << e << " ";
     }
-    
-    myfile << std::endl
-           << "codeTable:" << std::endl;
     for (auto e : codeTable)
     {
-        myfile << codeTable_it->first << ":" << codeTable_it->second;
+        myfile << codeTable_it->first << " " << codeTable_it->second;
     }
     myfile.close();
 }
 
-/*void Huffman::decode() // calls outputDecoded()
-{
-    //./test.cpp -encode > eath.pgm
-    std::string intensity;
-    unsigned char maxIntensity;
-    int size;
-    std::cin >> intensity >> width >> height >> maxIntensity >> size;
-    for (int i = 0; i < size ; i++)
-    {
-        std::bitset<100> temp;
-        if (temp == )
-        std::cin >> temp;
-        input.push_back(temp);
-    }
+void Huffman::decode(std::string outputfile) // calls outputDecoded()
+{   
 }
 
 void Huffman::outputDecoded(std::string outputfile) //input/output with files
 {
     std::string intensity;
-    unsigned char maxIntensity;
+    int maxIntensity;
     std::string directory = "./output/" + outputfile + ".pgm";
     std::ofstream myfile;
     myfile.open(directory);
-    //print file specs width, heigth
-    //print size of table code words && table of codewords
     myfile << intensity << std::endl
            << width << height << std::endl
-           << maxIntensity;
+           << maxIntensity << std::endl;
     for (auto e : decoded)
     {
         myfile << e << " ";
     }
     myfile.close();
-}*/
+}
+
+void Huffman::convertToBitSet()
+{
+}
