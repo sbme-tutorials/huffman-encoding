@@ -40,36 +40,36 @@ float Huffman::computeProb() // computes entropy and probability of each greysca
 
 void Huffman::buildTree()
 {
-    struct compare
+    struct Compare
     {
-        bool operator()(Node *left, Node *right)
-
+        bool operator()(Node *a, Node *b)
         {
-            return (left->p > right->p);
+            return (a->p > b->p);
         }
     };
     // Create a min heap & inserts all characters of input data[]
-    std::priority_queue<Node *, std::vector<Node *>, compare> minHeap;
-
+    std::priority_queue<Node *, std::vector<Node *>, Compare> minHeap;
     //build heap
     for (auto pixel : probability)
     {
-        Node *n = new Node{prob_it->first, prob_it->second, nullptr, nullptr};
+        Node *n = new Node{pixel.first, pixel.second, nullptr, nullptr};
         minHeap.push(n);
     }
+    Node *parent;
     while (minHeap.size() != 1)
     {
         Node *left = minHeap.top();
         minHeap.pop();
         Node *right = minHeap.top();
         minHeap.pop();
-        Node *parent = new Node;
+        parent = new Node;
         parent->p = left->p + right->p;
         parent->left = left;
         parent->right = right;
         minHeap.push(parent);
-        tree = parent;
     }
+    tree = parent;
+
     uint8_t *arr = new uint8_t[maxIntensity + 1]; //arbitrary size 0-255
     getCodeTable(tree, arr, 0);
     delete[] arr;
@@ -88,25 +88,29 @@ void Huffman::getCodeTable(Node *parent, uint8_t *arr, int index)
         arr[index] = 1;
         getCodeTable(parent->right, arr, index + 1);
     }
-    vector<uint8_t> binaryCode(arr, arr + index);
-    codeTable[parent->val] = binaryCode;
+
+    if (!(parent->right || parent->left))
+    {
+        vector<uint8_t> binaryCode(arr, arr + index);
+        codeTable[parent->val] = binaryCode;
+    }
 }
 
-double Huffman::encode(std::string outputfile)
-{
-    readInput();
-    computeProb();
-    buildTree();
-    double compressionRatio = 0;
-    for (auto element : input)
-    {
-        vector<uint8_t> binaryCode = codeTable[element];
-        encoded.push_back(binaryCode);
-        compressionRatio += binaryCode.size();
-    }
-    outputEncoded(outputfile);
-    return compressionRatio;
-}
+// double Huffman::encode(std::string outputfile)
+// {
+//     readInput();
+//     computeProb();
+//     buildTree();
+//     double compressionRatio = 0;
+//     for (auto element : input)
+//     {
+//         vector<uint8_t> binaryCode = codeTable[element];
+//         encoded.push_back(binaryCode);
+//         compressionRatio += binaryCode.size();
+//     }
+//     outputEncoded(outputfile);
+//     return (8 * width * height) / compressionRatio;
+// }
 
 void Huffman::outputEncoded(std::string outputfile) //input/output with files
 {
@@ -114,12 +118,15 @@ void Huffman::outputEncoded(std::string outputfile) //input/output with files
     std::ofstream myfile;
     myfile.open(directory);
     myfile << intensity << "\n"
-           << width << " " << height << " " << maxIntensity << " "
-           << encoded.size() << " " << codeTable.size() << std::endl; // print info
+           << width << " " << height << " " << maxIntensity << " " << codeTable.size() << " "; // print info
     for (auto c : codeTable)
     {
-        myfile << (int)c.first << " " << vectorToDecimal(c.second);
+        myfile << (int)c.first << " " << vectorToDecimal(c.second) << " ";
     }
+    // for (std::map<uint8_t, vector<uint8_t>>::iterator it = codeTable.begin(); it != codeTable.end(); ++it)
+    //     std::cout << (int)it->first << " ";
+
+    myfile << endl;
     for (auto e : encoded)
     {
         myfile << vectorToDecimal(e) << " ";
@@ -129,28 +136,28 @@ void Huffman::outputEncoded(std::string outputfile) //input/output with files
 
 void Huffman::decode(std::string outputfile) // calls outputDecoded()
 {
-    int sizeOfEncoded;
     int sizeOfTable;
     // first get important data from the file
     string directory = "./decoded/" + outputfile + ".pgm";
-    cin >> intensity >> width >> height >> maxIntensity >> sizeOfEncoded >> sizeOfTable;
+    cin >> intensity >> width >> height >> maxIntensity >> sizeOfTable;
 
     // second use this data to decode
-    // a) fill the codeWordTable as reversedCodeTable
-    map<int, unsigned char> reversedCodeTable;
+    // a) fill the codeWordTable as reversedCodeTable symbol codeWordAsInt
+    map<int, uint8_t> reversedCodeTable;
     for (int i = 0; i < sizeOfTable; i++)
     {
         int codeWordAsInt;
-        int temp;
-        cin >> temp >> codeWordAsInt;
-        reversedCodeTable[codeWordAsInt] = (int)temp;
+        int symbol;
+        cin >> symbol >> codeWordAsInt;
+        reversedCodeTable[codeWordAsInt] = (uint8_t)symbol;
     }
-    //b)fill the decoded vecotr <unsigned char>
-    for (int i = 0; i < sizeOfEncoded; i++)
+
+    //b)fill the decoded vecotr <uint8_t>
+    for (int i = 0; i < width * height; i++)
     {
-        int temp;
-        cin >> temp;
-        decoded.push_back(reversedCodeTable[temp]);
+        int codeWordAsInt;
+        cin >> codeWordAsInt;
+        decoded.push_back(reversedCodeTable[codeWordAsInt]);
     }
     //ouput the image as decoded file
     ofstream myfile;
@@ -180,25 +187,19 @@ int Huffman::vectorToDecimal(std::vector<uint8_t> v)
     return num;
 }
 
-double Huffman::encode_test(vector<unsigned char> input, std::string outputfile, std::vector<std::vector<uint8_t>> encoded)
+double Huffman::encode(std::string outputfile)
 {
-    this->input = input;
+    readInput();
     computeProb();
     buildTree();
     double compressionRatio = 0;
     for (auto element : input)
     {
-        vector<uint8_t> binaryCode = codeTable[element];
+        vector<uint8_t> binaryCode(codeTable[element]);
         encoded.push_back(binaryCode);
         compressionRatio += binaryCode.size();
     }
-    for (auto e : encoded)
-    {
-        for (auto ee : e)
-        {
-            std::cout << ee;
-        }
-        std::cout << std::endl;
-    }
+    outputEncoded(outputfile);
+    compressionRatio = (8 * width * height) / compressionRatio;
     return compressionRatio;
 }

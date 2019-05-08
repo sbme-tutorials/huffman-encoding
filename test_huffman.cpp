@@ -2,7 +2,10 @@
 
 int main(int argc, char *argv[])
 {
-    To encode file named (./run -encode < ./data/omaha.pgm)
+    // uint8_t i = 255;
+    // std::cout << (int)i;
+    // return 0;
+    // To encode file named (./run -encode < ./data/omaha.pgm)
     Huffman H;
     int indexArgv = 1; // 0 is the exe
     if (indexArgv < argc && std::string(argv[indexArgv]) == "-encode")
@@ -12,10 +15,9 @@ int main(int argc, char *argv[])
         std::string encodedFileName;
         if (indexArgv < argc)
         {
-            indexArgv++;
-            H.encode(encodedFileName);
             encodedFileName = std::string(argv[indexArgv]);
             H.encode(encodedFileName);
+            indexArgv++;
         }
         else
         {
@@ -29,9 +31,9 @@ int main(int argc, char *argv[])
         std::string decodedFileName;
         if (indexArgv < argc)
         {
-            indexArgv++;
             decodedFileName = std::string(argv[indexArgv]);
             H.decode(decodedFileName);
+            indexArgv++;
         }
         else
         {
@@ -39,10 +41,4 @@ int main(int argc, char *argv[])
             H.decode(decodedFileName);
         }
     }
-    else if (indexArgv < argc && std::string(argv[indexArgv]) == "-entropy")
-    {
-    }
     return 0;
-    huffman coding test
-
-}

@@ -1,15 +1,15 @@
-#ifndef HUFFMAN_HPP
-#define HUFFMAN_HPP
+#ifndef _HUFFMAN_H
+#define _HUFFMAN_H
+
 #include <vector>
 #include <utility>
 #include <string>
 #include <map>
 #include <bits/stdc++.h>
 
-
 struct Node //tree node
 {
-  unsigned char val; //greyscale value
+  uint8_t val; //greyscale value
   float p;           //probability
   Node *left = nullptr;
   Node *right = nullptr;
@@ -21,21 +21,20 @@ public:
   float computeProb();
   double encode(std::string outputfile);
   void decode(std::string outputfile);
-  double encode_test(std::vector<unsigned char> input,std::string outputfile, std::vector<std::vector<uint8_t>> encoded);
+  // double encode_test(std::vector<uint8_t> &input, std::string outputfile);
 
 private:
   std::string intensity = "p2";
   int maxIntensity = 255;
   Node *tree;
-  std::vector<unsigned char> input;
+  std::vector<uint8_t> input;
   int width = 0, height = 0;
-  std::map<unsigned char, float> probability;
-  std::map<unsigned char, float>::iterator prob_it;
-  std::map<unsigned char, std::vector<uint8_t>> codeTable; //greyscale value : code
-  std::map<unsigned char, std::vector<uint8_t>>::iterator codeTable_it;
+  std::map<uint8_t, float> probability;
+  std::map<uint8_t, float>::iterator prob_it;
+  std::map<uint8_t, std::vector<uint8_t>> codeTable; //greyscale value : code
+  std::map<uint8_t, std::vector<uint8_t>>::iterator codeTable_it;
   std::vector<std::vector<uint8_t>> encoded;
-  std::vector<unsigned char> decoded;
-
+  std::vector<uint8_t> decoded;
 
   void buildTree();
   void outputEncoded(std::string outputfile);
