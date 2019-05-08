@@ -47,7 +47,7 @@ To-do list:
 * Improving input/out method.
 
 ## Status
-Project is: _finished_
+Project is: _partially finished_
 
 ## Contact
 Created by Nada Ashraf, Khaled Maher, Ali Gamal, Sondos Mohammad, Samar Ibrahim. (Team 12 - SBE 2021)
