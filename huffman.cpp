@@ -96,22 +96,6 @@ void Huffman::getCodeTable(Node *parent, uint8_t *arr, int index)
     }
 }
 
-// double Huffman::encode(std::string outputfile)
-// {
-//     readInput();
-//     computeProb();
-//     buildTree();
-//     double compressionRatio = 0;
-//     for (auto element : input)
-//     {
-//         vector<uint8_t> binaryCode = codeTable[element];
-//         encoded.push_back(binaryCode);
-//         compressionRatio += binaryCode.size();
-//     }
-//     outputEncoded(outputfile);
-//     return (8 * width * height) / compressionRatio;
-// }
-
 void Huffman::outputEncoded(std::string outputfile) //input/output with files
 {
     std::string directory = "./encoded/" + outputfile + ".txt";
