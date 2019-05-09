@@ -30,7 +30,7 @@ private:
   std::vector<uint8_t> input;
   std::map<uint8_t, float> probability;
   std::map<uint8_t, std::string> codeTable;
-  td::string encoded;
+  std::string encoded;
   int sizeOfEncoded = 0;
   std::vector<uint8_t> decoded;
 
