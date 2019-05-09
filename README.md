@@ -35,6 +35,8 @@ To decode:
 
 The technique works by creating a binary tree of nodes. A node can be either a leaf node or an internal node. Initially, all nodes are leaf nodes, which contain the character itself, the frequency the character. Internal nodes contain character weight and links to two child nodes. For our implementation, bit ‘0’ represents tracing the left child and bit ‘1’ represents tracing the right child. A finished tree has n leaf nodes and n-1 internal nodes.
 
+We have utilized the <bits/stdc++.h> header to define types that you can use when you need an exact number of bits, with or without the sign. It's handy when we do computations on bits, or on specific range of values (in our case; grey scale values ranging from 0 to 255 in our image processing algorithm for example) because ywe don't have to determine the size of a long, or an unsigned int, we simpy use what we need. If you want 8 unsigned bits.
+
 > MORE TO BE ADDED
 
 ## Features
