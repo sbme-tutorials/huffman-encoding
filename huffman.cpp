@@ -6,7 +6,6 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include <queue>
-using namespace std;
 // functions definitions here
 
 void Huffman::readInput()
@@ -106,7 +105,7 @@ void Huffman::encode(std::string outputFile)
         if (codeTable.find(element) != codeTable.end())
         {
             std::string binaryCode = codeTable[element];
-            encoded.push_back(binaryCode);
+            encoded+=binaryCode;
             sizeOfEncoded += binaryCode.length();
         }
     }
@@ -127,7 +126,7 @@ void Huffman::outputEncoded(std::string outputFile)
     }
     for (auto e : encoded)
     {
-        myFile << std::string(e);
+        myFile << e;
     }
     myFile.close();
 }
@@ -145,14 +144,14 @@ void Huffman::decode(std::string outputFile) // calls outputDecoded()
     {
         std::string codeWord;
         int symbol;
-        cin >> symbol >> codeWord;
+        std::cin >> symbol >> codeWord;
         reversedCodeTable[codeWord] = (uint8_t)symbol;
     }
     std::string str = "";
     for (int i = 0; i < sizeOfEncoded; i++)
     {
         char c;
-        cin >> c;
+        std::cin >> c;
         str += c;
         if (reversedCodeTable.find(str) != reversedCodeTable.end())
         {
@@ -162,14 +161,14 @@ void Huffman::decode(std::string outputFile) // calls outputDecoded()
     }
     std::ofstream myFile;
     myFile.open(directory);
-    myFile << intensity << endl
+    myFile << intensity << std::endl
            << width << " " << height << std::endl
            << maxIntensity << std::endl;
     int i = 0;
     for (auto d : decoded)
     {
         if (i++ % width == 0)
-            myFile << endl;
+            myFile << std::endl;
         myFile << (int)d << " ";
     }
     myFile.close();
