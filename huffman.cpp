@@ -6,6 +6,8 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include <queue>
+#include <bitset>
+using namespace std;
 // functions definitions here
 
 void Huffman::readInput()
@@ -89,8 +91,7 @@ void Huffman::getCodeTable(Node *parent, char *arr, int index)
 
     if (!(parent->right || parent->left))
     {
-        arr[index] = '\0';
-        std::string binaryCode(arr, arr + index + 1);
+        std::string binaryCode(arr, arr + index);
         codeTable[parent->val] = binaryCode;
     }
 }
@@ -105,10 +106,11 @@ void Huffman::encode(std::string outputFile)
         if (codeTable.find(element) != codeTable.end())
         {
             std::string binaryCode = codeTable[element];
-            encoded+=binaryCode;
-            sizeOfEncoded += binaryCode.length();
+            encoded += binaryCode;
         }
     }
+    encoded.erase(std::remove(encoded.begin(), encoded.end(), '\0'), encoded.end());
+    sizeOfEncoded = encoded.length();
     outputEncoded(outputFile);
 }
 
@@ -119,58 +121,114 @@ void Huffman::outputEncoded(std::string outputFile)
     myFile.open(directory);
     myFile << intensity << "\n"
            << width << " " << height << " " << maxIntensity << " "
-           << codeTable.size() << " " << sizeOfEncoded << " "; // print info
+           << codeTable.size() << " " << sizeOfEncoded << " " << endl; //<< bitSize << " "; // print info
     for (auto c : codeTable)
     {
         myFile << (int)c.first << " " << c.second << " " << std::endl;
     }
-    for (auto e : encoded)
+    bitPacking();
+    for (auto p : packed)
     {
-        myFile << e;
+        myFile << p;
     }
     myFile.close();
 }
 
-void Huffman::decode(std::string outputFile) // calls outputDecoded()
+void Huffman::decode(std::string inputFile, std::string outputFile) // calls outputDecoded()
 {
+    fstream inFile;
+    std::string encodedFileName = "./encoded/" + inputFile + ".txt";
+    inFile.open(encodedFileName, ios::in);
     int sizeOfTable = 0;
     // get important data from the file
     std::string directory = "./decoded/" + outputFile + ".pgm";
-    std::cin >> intensity >> width >> height >> maxIntensity >> sizeOfTable >> sizeOfEncoded;
-
+    // std::cin >> intensity >> width >> height >> maxIntensity >> sizeOfTable >> sizeOfEncoded; //>> bitSize;
+    inFile >> intensity >> width >> height >> maxIntensity >> sizeOfTable >> sizeOfEncoded; //>> bitSize;
     // fill the codeWordTable as reversedCodeTable symbol codeWordAsInt
     std::map<std::string, uint8_t> reversedCodeTable;
     for (int i = 0; i < sizeOfTable; i++)
     {
         std::string codeWord;
         int symbol;
-        std::cin >> symbol >> codeWord;
+        // cin >> symbol >> codeWord;
+        inFile >> symbol >> codeWord;
         reversedCodeTable[codeWord] = (uint8_t)symbol;
     }
+    to_decode = "";
+    int numOfBitSets = ceil(sizeOfEncoded / 8.0);
+    while (!inFile.eof())
+    {
+        char x;
+        inFile.get(x);
+        bitset<8> chr = x;
+        to_decode += chr.to_string(); //0100101
+    }
+    // for (int i = 0; i < numOfBitSets; i++)
+    // {
+    //     char x;
+    //     // cin >> x;
+    //     inFile.get(x);
+    //     bitset<8> chr = x;
+    //     // cout << chr;
+    //     to_decode += chr.to_string(); //0100101
+    //     // cout<<to_decode;
+    //     // return;
+    // }
+    inFile.close();
+
     std::string str = "";
     for (int i = 0; i < sizeOfEncoded; i++)
     {
-        char c;
-        std::cin >> c;
-        str += c;
+        str += to_decode[i];
         if (reversedCodeTable.find(str) != reversedCodeTable.end())
         {
             decoded.push_back(reversedCodeTable[str]);
             str = "";
         }
     }
+    // std::string mytext(reinterpret_cast<char*>(xx));
     std::ofstream myFile;
     myFile.open(directory);
-    myFile << intensity << std::endl
+    myFile << intensity << endl
            << width << " " << height << std::endl
-           << maxIntensity << std::endl;
+           << maxIntensity;
     int i = 0;
     for (auto d : decoded)
     {
         if (i++ % width == 0)
-            myFile << std::endl;
+            myFile << endl;
         myFile << (int)d << " ";
     }
     myFile.close();
 }
 
+void Huffman::bitPacking()
+{
+    packed.clear();
+    std::string str = "";
+    for (auto e : encoded)
+    {
+        str.push_back(e);
+        if (str.size() == 8)
+        {
+            int dec = std::bitset<8>(str).to_ulong();
+            unsigned char temp = (unsigned char)dec;
+            packed.push_back(temp);
+            str = "";
+        }
+    }
+    int numOfZeros = (8 - (encoded.length() % 8));
+    if (numOfZeros != 8)
+    {
+        for (int i = 0; i < numOfZeros; ++i)
+        {
+            str.push_back('0');
+        }
+        if (str.size() == 8)
+        {
+            int dec = std::bitset<8>(str).to_ulong();
+            unsigned char temp = (unsigned char)dec;
+            packed.push_back(temp);
+        }
+    }
+}

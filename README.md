@@ -21,14 +21,15 @@ Pre-compression image is on the right, post-compression image is on the left. So
 
 ## Setup
 ```
-To compile:
-g++ huffman.cpp test_huffman.cpp -o Huffman
+make
+```
 
-To encode:
-./Huffman -encode < ./data/earth.pgm
+```
+./run -encode [omaha] < ./data/[omaha.pgm]
+```
 
-To decode:
-./Huffman -decode < ./eecoded/output.txt
+```
+./run -decode [omaha]
 ```
 
 ## Methodolgy
@@ -46,10 +47,10 @@ List of features ready and TODOs for future development
 
 To-do list:
 * Conversion of text files into binary code for further loseless compression of images.
-* Improving input/out method.
+* Improving input/out method. 
 
 ## Status
-Project is: _partially finished_
+Project is: _finished_
 
 ## Contact
 Created by Nada Ashraf, Khaled Maher, Ali Gamal, Sondos Mohammad, Samar Ibrahim. (Team 12 - SBE 2021)

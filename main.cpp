@@ -24,17 +24,20 @@ int main(int argc, char *argv[])
     else if (indexArgv < argc && std::string(argv[indexArgv]) == "-decode")
     {
         indexArgv++;
+        std::string encodedFileName;
         std::string decodedFileName;
-        if (indexArgv < argc)
+        if (indexArgv + 1 < argc)
         {
-            decodedFileName = std::string(argv[indexArgv]);
-            H.decode(decodedFileName);
-            indexArgv++;
+            encodedFileName = std::string(argv[indexArgv]);
+            decodedFileName = std::string(argv[++indexArgv]);
+            H.decode(encodedFileName, decodedFileName);
+            indexArgv += 2;
         }
-        else
+        else if (indexArgv < argc)
         {
-            decodedFileName = "output";
-            H.decode(decodedFileName);
+            encodedFileName = std::string(argv[indexArgv]);
+            H.decode(encodedFileName, encodedFileName);
+            indexArgv++;
         }
     }
     return 0;
