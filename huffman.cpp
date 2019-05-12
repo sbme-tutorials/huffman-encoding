@@ -7,7 +7,7 @@
 #include <bits/stdc++.h>
 #include <queue>
 #include <bitset>
-using namespace std;
+
 // functions definitions here
 
 void Huffman::readInput()
@@ -121,7 +121,7 @@ void Huffman::outputEncoded(std::string outputFile)
     myFile.open(directory);
     myFile << intensity << "\n"
            << width << " " << height << " " << maxIntensity << " "
-           << codeTable.size() << " " << sizeOfEncoded << " " << endl; //<< bitSize << " "; // print info
+           << codeTable.size() << " " << sizeOfEncoded << " " << std::endl; //<< bitSize << " "; // print info
     for (auto c : codeTable)
     {
         myFile << (int)c.first << " " << c.second << " " << std::endl;
@@ -136,21 +136,20 @@ void Huffman::outputEncoded(std::string outputFile)
 
 void Huffman::decode(std::string inputFile, std::string outputFile) // calls outputDecoded()
 {
-    fstream inFile;
+    std::fstream inFile;
     std::string encodedFileName = "./encoded/" + inputFile + ".txt";
-    inFile.open(encodedFileName, ios::in);
+    inFile.open(encodedFileName, std::ios::in);
     int sizeOfTable = 0;
     // get important data from the file
     std::string directory = "./decoded/" + outputFile + ".pgm";
-    // std::cin >> intensity >> width >> height >> maxIntensity >> sizeOfTable >> sizeOfEncoded; //>> bitSize;
-    inFile >> intensity >> width >> height >> maxIntensity >> sizeOfTable >> sizeOfEncoded; //>> bitSize;
+
+    inFile >> intensity >> width >> height >> maxIntensity >> sizeOfTable >> sizeOfEncoded;
     // fill the codeWordTable as reversedCodeTable symbol codeWordAsInt
     std::map<std::string, uint8_t> reversedCodeTable;
     for (int i = 0; i < sizeOfTable; i++)
     {
         std::string codeWord;
         int symbol;
-        // cin >> symbol >> codeWord;
         inFile >> symbol >> codeWord;
         reversedCodeTable[codeWord] = (uint8_t)symbol;
     }
@@ -160,20 +159,10 @@ void Huffman::decode(std::string inputFile, std::string outputFile) // calls out
     {
         char x;
         inFile.get(x);
-        bitset<8> chr = x;
+        std::bitset<8> chr = x;
         to_decode += chr.to_string(); //0100101
     }
-    // for (int i = 0; i < numOfBitSets; i++)
-    // {
-    //     char x;
-    //     // cin >> x;
-    //     inFile.get(x);
-    //     bitset<8> chr = x;
-    //     // cout << chr;
-    //     to_decode += chr.to_string(); //0100101
-    //     // cout<<to_decode;
-    //     // return;
-    // }
+
     inFile.close();
 
     std::string str = "";
@@ -186,17 +175,16 @@ void Huffman::decode(std::string inputFile, std::string outputFile) // calls out
             str = "";
         }
     }
-    // std::string mytext(reinterpret_cast<char*>(xx));
     std::ofstream myFile;
     myFile.open(directory);
-    myFile << intensity << endl
+    myFile << intensity << std::endl
            << width << " " << height << std::endl
            << maxIntensity;
     int i = 0;
     for (auto d : decoded)
     {
         if (i++ % width == 0)
-            myFile << endl;
+            myFile << std::endl;
         myFile << (int)d << " ";
     }
     myFile.close();
@@ -217,7 +205,7 @@ void Huffman::bitPacking()
             str = "";
         }
     }
-    int numOfZeros = (8 - (encoded.length() % 8));
+    int numOfZeros = (8 - (encoded.length() % 8)); // to complete the last byte of the code
     if (numOfZeros != 8)
     {
         for (int i = 0; i < numOfZeros; ++i)
